@@ -1,5 +1,5 @@
 rm(list=ls())
-setwd("~/Desktop/stuff/Routine Scripts/Get Oxygen Data")
+setwd("/usr/local/bin")
 library(ncdf4)
 CTD=data.frame(time=as.POSIXct(ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),"time"),origin='1970-01-01 00:00:00'),temperature=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'temperature'),conductivity=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'conductivity'),pressure=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'pressure'),salinity=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'salinity'),oxygen_phase_delay_V=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'oxygen_phase_delay_V'),oxygen_phase_delay_us=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'oxygen_phase_delay_us'))
 
@@ -57,7 +57,7 @@ CTD$oxygen=NA
 for(i in 1:length(CTD$time)){
   row=CTD[i,]
   CTD$oxygen[i]=CalcMl.L(row)
-}  
+}
 
 pdf("NB Converted Oxygen Data.pdf",width=11,height=8.5)
 plot(CTD$oxygen~CTD$time,type='l',col='forestgreen',main='NB Converted Oxygen Data',xlab='Time',ylab='Oxygen (mL/L)')
@@ -66,10 +66,10 @@ dev.off()
 
 
 df=data.frame(time_UTC=CTD$time,oxygen_ml.l=CTD$oxygen)
-  
-write.csv(df,'NB Converted Oxygen.csv',row.names = F)  
-  
-  
+
+write.csv(df,'NB Converted Oxygen.csv',row.names = F)
+
+
 drive_update(file=as_id("https://drive.google.com/open?id=15A_xBFzfqZGvdysQV6-N3VT3DMWPlNe4/view?usp=sharing"),media=paste("~/Desktop/stuff/Routine Scripts/Get Oxygen Data/","NB Converted Oxygen Data.pdf",sep=''))
 
 
