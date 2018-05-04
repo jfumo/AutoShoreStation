@@ -4,27 +4,30 @@ library("chron")
 library("RColorBrewer")
 library("lattice")
 library("ncdf4")
+library("lubridate")
 
 CTD=data.frame(time=as.POSIXct(ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),"time"),origin='1970-01-01 00:00:00'),temperature=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'temperature'),conductivity=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'conductivity'),pressure=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'pressure'),salinity=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'salinity'),oxygen_phase_delay_V=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'oxygen_phase_delay_V'),oxygen_phase_delay_us=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'oxygen_phase_delay_us'))
 
-library(googledrive)
-file=drive_download(drive_get("SASS Inventory and Cleaning",id="1099lNMJ3XZQIFv7oSr0Q-5i4fihx7gnvoxMaVhiUhJE")[1,],type='xlsx',overwrite=T)
-library(xlsx)
-coef=read.xlsx("SASS Inventory and Cleaning.xlsx",sheetName="SBE 63 O2")
-coef$START.TIME=as.POSIXct(strptime(as.character(coef$START.TIME),'%Y-%m-%d %H:%M:%S'))
+#library(googledrive)
+#file=drive_download(drive_get("SASS Inventory and Cleaning",id="1099lNMJ3XZQIFv7oSr0Q-5i4fihx7gnvoxMaVhiUhJE")[1,],type='xlsx',overwrite=T)
+#library(xlsx)
+#coef=read.xlsx("SASS Inventory and Cleaning.xlsx",sheetName="SBE 63 O2")
+#coef$START.TIME=as.POSIXct(coef$START.TIME, tz = "UTC", format = '%m-%d-%Y %H:%M:%S')
 
+coef <- read.csv("data/SASS Inventory and Cleaning - SBE 63 O2.csv")
+coef$START.TIME <- mdy_hms(coef$START.TIME)
 coef=coef[is.na(coef$START.TIME)==F,]
 
+##  Add column to hold Oxygen Deployment info for that sample
+CTD$OxygenDeployment<-NA
+##  Add column for quantizing Oxygen data by calibration period, aka Oxygen Deployment
+coef$OxygenDeployment<-NA
 
-CTD$OxygenDeployment=NA
-coef$OxygenDeployment=NA
 for(i in 1:length(coef$START.TIME)){
   CTD$OxygenDeployment[CTD$time>=coef$START.TIME[i]]=i
   CTD=CTD[CTD$time<=coef$START.TIME[i]-3600 | CTD$time>=coef$START.TIME[i]+3600,]
   coef$OxygenDeployment[i]=i
 }
-
-
 
 #coef
 E=.011
@@ -57,6 +60,7 @@ CalcMl.L=function(row){
   return(ml.l)
 }
 
+## Add column to hold calculated dissolved oxygen value
 CTD$oxygen=NA
 for(i in 1:length(CTD$time)){
   row=CTD[i,]
