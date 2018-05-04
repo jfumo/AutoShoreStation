@@ -1,6 +1,10 @@
 rm(list=ls())
-setwd("/usr/local/bin")
-library(ncdf4)
+setwd("/home/jfumo/AutoShoreStation/Oxygen")
+library("chron")
+library("RColorBrewer")
+library("lattice")
+library("ncdf4")
+
 CTD=data.frame(time=as.POSIXct(ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),"time"),origin='1970-01-01 00:00:00'),temperature=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'temperature'),conductivity=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'conductivity'),pressure=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'pressure'),salinity=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'salinity'),oxygen_phase_delay_V=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'oxygen_phase_delay_V'),oxygen_phase_delay_us=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/newport_pier-d02-2018.nc"),'oxygen_phase_delay_us'))
 
 library(googledrive)
