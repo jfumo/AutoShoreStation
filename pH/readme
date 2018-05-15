@@ -1,1 +1,1 @@
-
+Ideally a cron job will run this R script at least once per day.  New data comes in every 4 minutes, but visual differences will be on the order of one hour, so running the cron every hour should suffice.
