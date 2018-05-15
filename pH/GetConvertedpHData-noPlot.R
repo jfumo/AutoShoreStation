@@ -1,5 +1,6 @@
 rm(list=ls())
 #install.packages("lubridate")
+#install.packages("googleAuthR")
 library("lubridate")
 
 SaveToDrive=T
@@ -13,6 +14,12 @@ library(ncdf4)
 rawData=data.frame(time=as.POSIXct(ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),"time"),origin='1970-01-01 00:00:00'),ph_counts=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_counts'),ph_voltage=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_voltage'),ph_raw=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_raw'),temp_counts=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'temp_counts'),thermistor_voltage=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'thermistor_voltage'),thermistor_raw=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'thermistor_raw'),temperature=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'temperature'),ph=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph'))
 rawData[,2:9]=lapply(rawData[,2:9],as.numeric)
 #-------------------------------------------------------------------------------------------------------------
+# auth to google
+library(googleAuthR)
+options(googleAuthR.scopes.selected = "https://www.googleapis.com/auth/drive")
+service_token <- gar_auth_service(json_file="/home/jfumo/AutoShoreStation/.ssh/sccoos-ucsdgoogle-0e992ba0c31b.json")
+
+
 #read in google sheets coef and re-calculate ph voltage. 
 library(googledrive)
 file=drive_download(drive_get(id="1099lNMJ3XZQIFv7oSr0Q-5i4fihx7gnvoxMaVhiUhJE")[1,],type='xlsx',overwrite=T)
