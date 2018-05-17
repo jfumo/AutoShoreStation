@@ -1,21 +1,22 @@
 rm(list=ls())
-install.packages("lubridate")
-library("lubridate")
+
 
 SaveToDrive=T
 
 TrisCalTimes=data.frame(time=c("2/2/18 13:37:41","3/1/18 8:53:16","4/3/18 11:50:36"))
+  
 
-#setwd("~/Desktop/stuff/Routine Scripts/Get Converted pH Data")
-setwd("/home/jfumo/AutoShoreStation/pH")
-WD <- getwd()
+
+
+
+setwd("~/Desktop/stuff/Routine Scripts/Get Converted pH Data")
 library(ncdf4)
 rawData=data.frame(time=as.POSIXct(ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),"time"),origin='1970-01-01 00:00:00'),ph_counts=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_counts'),ph_voltage=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_voltage'),ph_raw=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_raw'),temp_counts=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'temp_counts'),thermistor_voltage=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'thermistor_voltage'),thermistor_raw=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'thermistor_raw'),temperature=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'temperature'),ph=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph'))
 rawData[,2:9]=lapply(rawData[,2:9],as.numeric)
 #-------------------------------------------------------------------------------------------------------------
 #read in google sheets coef and re-calculate ph voltage. 
 library(googledrive)
-file=drive_download(drive_get(id="1099lNMJ3XZQIFv7oSr0Q-5i4fihx7gnvoxMaVhiUhJE")[1,],type='xlsx',overwrite=T)
+file=drive_download(drive_get("SASS Inventory and Cleaning",id="1099lNMJ3XZQIFv7oSr0Q-5i4fihx7gnvoxMaVhiUhJE")[1,],type='xlsx',overwrite=T)
 library(xlsx)
 Coef=read.xlsx("SASS Inventory and Cleaning.xlsx",sheetName="pH_NBPier_Coef")
 rawData$pH_slope=NaN
@@ -27,7 +28,6 @@ rawData$Ts=NaN
 rawData$Deployment=NaN
 Coef=Coef[is.na(Coef$start_time)==F,]
 Coef$start_time=as.POSIXct(strptime(as.character(Coef$start_time),'%Y-%m-%d %H:%M:%S'))
-Coef$start_time <- ymd_hms(Coef$start_time)
 for(i in 1:length(Coef$start_time)){
   rawData$pH_slope[rawData$time>=Coef$start_time[i]]=Coef$pH_slope[i]
   rawData$pH_intercept[rawData$time>=Coef$start_time[i]]=Coef$pH_intercept[i]
@@ -97,7 +97,7 @@ calc_dfet_pHint<-function(Vint, tempC, Eo25C){
 rawData$Eo25C=NaN
 
 #Read in tris times and calculate Eo25C for each calibration point
-TrisCalTimes$time=as.POSIXct(strptime(as.character(TrisCalTimes$time),'%m/%d/%y %H:%M:%S'), tz = "America/Los_Angeles")
+TrisCalTimes$time=as.POSIXct(strptime(as.character(TrisCalTimes$time),'%m/%d/%y %H:%M:%S'))
 
 for(i in 1:length(TrisCalTimes$time)){
   rowNumber=which(rawData$time==TrisCalTimes$time[i])
@@ -129,6 +129,7 @@ for(i in 1:length(rawData$time)){
   rawData$pHint[i]=calc_dfet_pHint(rawData$ph_voltage[i],rawData$temperature[i],rawData$Eo25C[i])
 }
 
+
 #-------------------------------------------------------------------------------------------------------------
 name='TRIScorrectedData.csv'
 #plot up the data and save as a .pdf
@@ -148,7 +149,7 @@ write.csv(df,name)
 
 #And save that workbook to google drive
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1Fu8sXejMbbj92Rie52B6ajtT4VlPekF3/view?usp=sharing"),media=paste(WD,name,sep=''))
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1Fu8sXejMbbj92Rie52B6ajtT4VlPekF3/view?usp=sharing"),media=paste("~/Desktop/stuff/Routine Scripts/Get Converted pH Data/",name,sep=''))
 }
 
 #And update the plot
@@ -179,5 +180,7 @@ dev.off()
 if(SaveToDrive==T){
   drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1TUGqf2aC8Ywv3JCPQB5IjPalJGYHteD9/view?usp=sharing"),media="~/Desktop/stuff/Routine Scripts/Get Converted pH Data/Last48Hours.pdf")
 }
+
+
 
 quit(save="no")
