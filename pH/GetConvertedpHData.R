@@ -6,7 +6,8 @@ library(xlsx)
 library(ncdf4)
 
 rm(list=ls())
-SaveToDrive=T
+#SaveToDrive=T
+SaveToDrive=F
 setwd("/home/jfumo/AutoShoreStation/pH")
 WD <- getwd()
 
@@ -65,7 +66,7 @@ token <- oauth_service_token(
   jsonlite::fromJSON("/home/jfumo/AutoShoreStation/.ssh/sccoos-r-b272b076e3fe.json"),
   "https://www.googleapis.com/auth/userinfo.profile")
 drive_auth(service_token = "/home/jfumo/AutoShoreStation/.ssh/sccoos-r-b272b076e3fe.json")
-file=drive_download(drive_get(id="1099lNMJ3XZQIFv7oSr0Q-5i4fihx7gnvoxMaVhiUhJE"),type='xlsx',overwrite=T)
+file=drive_download(as_id("1099lNMJ3XZQIFv7oSr0Q-5i4fihx7gnvoxMaVhiUhJE"),type='xlsx',overwrite=T)
 Coef=read.xlsx("SASS Inventory and Cleaning.xlsx",sheetName="pH_NBPier_Coef")
 Coef=Coef[is.na(Coef$start_time)==F,]
 Coef$start_time=as.POSIXct(strptime(as.character(Coef$start_time),'%Y-%m-%d %H:%M:%S'))
@@ -152,29 +153,11 @@ df=data.frame(time=rawData$time,temperature=rawData$temperature,pH=rawData$pHint
 write.csv(df,name)
 
 #-------------------------------------------------------------------------------------------------------------
-# And save that workbook to google drive
-if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1Fu8sXejMbbj92Rie52B6ajtT4VlPekF3/view?usp=sharing"),media=paste("~/Desktop/stuff/Routine Scripts/Get Converted pH Data/",name,sep=''))
-}
-
-#-------------------------------------------------------------------------------------------------------------
-# And update the plot
-if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1y_lmprMbP8rqH7nrXsO9sxd0-KaSdJV3/view?usp=sharing"),media="~/Desktop/stuff/Routine Scripts/Get Converted pH Data/TRIScorrectedData.pdf")
-}
-
-#-------------------------------------------------------------------------------------------------------------
 # And plot just the TRIS data
 pdf('TRIScorrectedPlot.pdf',height=8.5,width=11)
 plot(rawData$pHint~rawData$time,type='l',col='blue',main="NB Pier pH Data",ylab='pH',xlab='Time')
 legend('bottomright',legend=as.vector(c('SCCOOS Automated Shore Stations',"http://sccoos.org/data/autoss/")),text.col=c('black','blue'),bty='n')
 dev.off()
-
-#-------------------------------------------------------------------------------------------------------------
-# And put that on the server too
-if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/19G8OhfYsxuFZrTAIeZTEW6A2S6v5Nmo4/view?usp=sharing"),media="~/Desktop/stuff/Routine Scripts/Get Converted pH Data/TRIScorrectedPlot.pdf")
-}
 
 #-------------------------------------------------------------------------------------------------------------
 # And plot the last 48 hours too
@@ -184,10 +167,17 @@ axis(1,at=as.POSIXct(strptime(paste(unique(substr(rawData$time[rawData$time>=tai
 legend('bottomright',legend=as.vector(c('SCCOOS Automated Shore Stations',"http://sccoos.org/data/autoss/")),text.col=c('black','blue'),bty='n')
 dev.off()
 
+
 #-------------------------------------------------------------------------------------------------------------
-# And put that on the server too
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1TUGqf2aC8Ywv3JCPQB5IjPalJGYHteD9/view?usp=sharing"),media="~/Desktop/stuff/Routine Scripts/Get Converted pH Data/Last48Hours.pdf")
+  # And save that workbook to google drive
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1Fu8sXejMbbj92Rie52B6ajtT4VlPekF3/view?usp=sharing"),media=paste(WD,name,sep='/'))
+  # And put a .pdf of the plot and the data on google drive
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1y_lmprMbP8rqH7nrXsO9sxd0-KaSdJV3/view?usp=sharing"),media=paste(WD,"TRIScorrectedData.pdf",sep='/'))
+  # And put the plot of the TRIS data on google drive
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/19G8OhfYsxuFZrTAIeZTEW6A2S6v5Nmo4/view?usp=sharing"),media=paste(WD,"TRIScorrectedPlot.pdf",sep='/'))
+  # And put the last 48 hours on google drive
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1TUGqf2aC8Ywv3JCPQB5IjPalJGYHteD9/view?usp=sharing"),media=paste(WD,"Last48Hours.pdf",sep = '/'))
 }
 
 quit(save="no")
