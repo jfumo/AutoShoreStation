@@ -1,3 +1,5 @@
+browser()
+
 library(httr)
 library(googledrive)
 library(rJava)
