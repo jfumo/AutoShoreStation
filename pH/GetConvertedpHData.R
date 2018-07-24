@@ -1,3 +1,5 @@
+browser()
+
 library(httr)
 library(googledrive)
 library(rJava)
@@ -54,7 +56,7 @@ calc_dfet_pHint<-function(Vint, tempC, Eo25C){
 
 #-------------------------------------------------------------------------------------------------------------
 # Read in tris times
-TrisCalTimes=data.frame(time=c("2/2/18 13:37:41","3/1/18 8:53:16","4/3/18 11:50:36"))
+TrisCalTimes=data.frame(time=c("2/2/18 13:37:41","3/1/18 8:53:16","4/3/18 11:50:36","5/16/18 13:32:04","6/22/18 11:34:50"))
 TrisCalTimes$time=as.POSIXct(strptime(as.character(TrisCalTimes$time),'%m/%d/%y %H:%M:%S'), tz = "America/Los_Angeles")
 #TrisCalTimes$time=as.POSIXct(strptime(as.character(TrisCalTimes$time),'%m/%d/%y %H:%M:%S'))
 
