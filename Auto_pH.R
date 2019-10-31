@@ -163,9 +163,12 @@ Retain=rbind(Retain,cbind(rawData$time[c(51314:52030)],rawData$ph[c(51314:52030)
 rawData=rawData[-c(51314:53030),]
 Retain=rbind(Retain,cbind(rawData$time[c(82819:89935)],rawData$ph[c(82819:89935)],2,rawData$temperature[c(82819:89935)]))
 rawData=rawData[-c(82819:89935),]
+Retain=rbind(Retain,cbind(rawData$time[c(78847:82819)],rawData$ph[c(78847:82819)],2,rawData$temperature[c(78847:82819)]))
+rawData=rawData[-c(78847:82819),]
 #
-
 plot(rawData$temperature~rawData$time,type='l')
+
+
 
 colnames(Retain)=c("time","pH","Deployment",'Temperature')
 Retain=as.data.frame(Retain)
@@ -191,12 +194,12 @@ write.csv(df,"TRIScorrectedData.csv")
 
 #And save that workbook to google drive
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1Fu8sXejMbbj92Rie52B6ajtT4VlPekF3/view?usp=sharing"),media=paste("~/Desktop/stuff/RoutineScripts/Get Converted pH Data/",name,sep=''))
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1Fu8sXejMbbj92Rie52B6ajtT4VlPekF3/view?usp=sharing"),media=paste("~/sccoos/RStudio/Auto_pH/",name,sep=''))
 }
 
 #And update the plot
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1y_lmprMbP8rqH7nrXsO9sxd0-KaSdJV3/view?usp=sharing"),media="~/Desktop/stuff/RoutineScripts/Get Converted pH Data/TRIScorrectedData.pdf")
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1y_lmprMbP8rqH7nrXsO9sxd0-KaSdJV3/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/TRIScorrectedData.pdf")
 }
 
 #plot just the TRIS data
@@ -211,7 +214,7 @@ dev.off()
 
 #and put that on the server too
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/19G8OhfYsxuFZrTAIeZTEW6A2S6v5Nmo4/view?usp=sharing"),media="~/Desktop/stuff/RoutineScripts/Get Converted pH Data/TRIScorrectedPlot.pdf")
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/19G8OhfYsxuFZrTAIeZTEW6A2S6v5Nmo4/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/TRIScorrectedPlot.pdf")
 }
 
 #And plot the last 48 hours too
@@ -223,7 +226,7 @@ dev.off()
 
 #and put that on the server too
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1TUGqf2aC8Ywv3JCPQB5IjPalJGYHteD9/view?usp=sharing"),media="~/Desktop/stuff/RoutineScripts/Get Converted pH Data/Last48Hours.pdf")
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1TUGqf2aC8Ywv3JCPQB5IjPalJGYHteD9/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/Last48Hours.pdf")
 }
 
 
@@ -243,8 +246,9 @@ legend('topleft',legend=as.vector(c('pH','Temperature')),col=c('blue','gray'),lt
 dev.off()
 
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/open?id=1Yp3B-LtKJvuBvunakloUuKKjL4VOAjtM/view?usp=sharing"),media="~/Desktop/stuff/RoutineScripts/Get Converted pH Data/TRIScorrectedPlotwithTemp.pdf")
+  drive_update(file=as_id("https://drive.google.com/open?id=1Yp3B-LtKJvuBvunakloUuKKjL4VOAjtM/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/TRIScorrectedPlotwithTemp.pdf")
 }
+
 
 pdf('TRIScorrectedPlotwithTempAndBadData.pdf',height=8.5,width=11)
 par(mar=c(8,5,5,5))
@@ -264,7 +268,7 @@ legend('topleft',legend=as.vector(c('pH','Flagged pH','Temperature','Flagged Tem
 dev.off()
 
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/open?id=1LeWloeKLExtI2_X1Sg6sr7oY0v7Zv5rh/view?usp=sharing"),media="~/Desktop/stuff/RoutineScripts/Get Converted pH Data/TRIScorrectedPlotwithTempAndBadData.pdf")
+  drive_update(file=as_id("https://drive.google.com/open?id=1LeWloeKLExtI2_X1Sg6sr7oY0v7Zv5rh/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/TRIScorrectedPlotwithTempAndBadData.pdf")
 }
 
 pdf('Eo25Values.pdf',height=8.5,width=11)
@@ -281,10 +285,7 @@ dev.off()
 #
 
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/open?id=1Nw9dp_zpacP18BgGjNpLGHZhs7HUq2vD/view?usp=sharing"),media="~/Desktop/stuff/RoutineScripts/Get Converted pH Data/Eo25Values.pdf")
+  drive_update(file=as_id("https://drive.google.com/open?id=1Nw9dp_zpacP18BgGjNpLGHZhs7HUq2vD/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/Eo25Values.pdf")
 }
-
-
-plot(rawData$temperature[c(83000:83894)]~rawData$time[c(83000:83894)])
 
 
