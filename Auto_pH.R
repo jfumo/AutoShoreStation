@@ -6,7 +6,7 @@ SaveToDrive=T
 TrisCalTimes=data.frame(time=c("2/2/18 21:37:41","3/1/18 17:05:17","4/3/18 18:50:36","5/16/18 21:32:04","6/22/18 19:42:51","10/3/18 17:35:05","1/29/19 17:56:37","4/3/19 17:08:39","06/12/19 16:52:55","10/3/19 18:58:22"))
 
 
-
+ 
 setwd("~/sccoos/RStudio/Auto_pH")
 library(ncdf4)
 rawData=data.frame(time=as.POSIXct(ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),"time"),origin='1970-01-01 00:00:00'),ph_counts=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_counts'),ph_voltage=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_voltage'),ph_raw=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_raw'),temp_counts=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'temp_counts'),thermistor_voltage=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'thermistor_voltage'),thermistor_raw=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'thermistor_raw'),temperature=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'temperature'),ph=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph'))
