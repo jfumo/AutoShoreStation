@@ -5,9 +5,8 @@ SaveToDrive=T
 
 TrisCalTimes=data.frame(time=c("2/2/18 21:37:41","3/1/18 17:05:17","4/3/18 18:50:36","5/16/18 21:32:04","6/22/18 19:42:51","10/3/18 17:35:05","1/29/19 17:56:37","4/3/19 17:08:39","06/12/19 16:52:55","10/3/19 18:58:22"))
 
+wdir=setwd(getwd())
 
-  
-setwd("~/sccoos/RStudio/Auto_pH")
 library(ncdf4)
 rawData=data.frame(time=as.POSIXct(ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),"time"),origin='1970-01-01 00:00:00'),ph_counts=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_counts'),ph_voltage=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_voltage'),ph_raw=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph_raw'),temp_counts=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'temp_counts'),thermistor_voltage=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'thermistor_voltage'),thermistor_raw=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'thermistor_raw'),temperature=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'temperature'),ph=ncvar_get(nc_open("http://sccoos.org/thredds/dodsC/autoss/005_newport_pier-2018.nc"),'ph'))
 
@@ -174,7 +173,7 @@ colnames(Retain)=c("time","pH","Deployment",'Temperature')
 Retain=as.data.frame(Retain)
 Retain$time=as.POSIXct(Retain$time,origin='1970-01-01')
 #-------------------------------------------------------------------------------------------------------------
-name='TRIScorrectedData.csv'
+
 #plot up the data and save as a .pdf
 pdf('TRIScorrectedData.pdf',height=8.5,width=11)
 par(mar=c(8,5,5,5))
@@ -194,12 +193,14 @@ write.csv(df,"TRIScorrectedData.csv")
 
 #And save that workbook to google drive
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1Fu8sXejMbbj92Rie52B6ajtT4VlPekF3/view?usp=sharing"),media=paste("~/sccoos/RStudio/Auto_pH/",name,sep=''))
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1Fu8sXejMbbj92Rie52B6ajtT4VlPekF3/view?usp=sharing"),
+               media="TRIScorrectedData.csv")
 }
 
 #And update the plot
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1y_lmprMbP8rqH7nrXsO9sxd0-KaSdJV3/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/TRIScorrectedData.pdf")
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1y_lmprMbP8rqH7nrXsO9sxd0-KaSdJV3/view?usp=sharing"),
+               media=("TRIScorrectedData.pdf"))
 }
 
 #plot just the TRIS data
@@ -214,7 +215,8 @@ dev.off()
 
 #and put that on the server too
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/19G8OhfYsxuFZrTAIeZTEW6A2S6v5Nmo4/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/TRIScorrectedPlot.pdf")
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/19G8OhfYsxuFZrTAIeZTEW6A2S6v5Nmo4/view?usp=sharing"),
+               media=("TRIScorrectedPlot.pdf"))
 }
 
 #And plot the last 48 hours too
@@ -226,7 +228,7 @@ dev.off()
 
 #and put that on the server too
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1TUGqf2aC8Ywv3JCPQB5IjPalJGYHteD9/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/Last48Hours.pdf")
+  drive_update(file=as_id("https://drive.google.com/a/ucsd.edu/file/d/1TUGqf2aC8Ywv3JCPQB5IjPalJGYHteD9/view?usp=sharing"),media="Last48Hours.pdf")
 }
 
 
@@ -246,7 +248,7 @@ legend('topleft',legend=as.vector(c('pH','Temperature')),col=c('blue','gray'),lt
 dev.off()
 
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/open?id=1Yp3B-LtKJvuBvunakloUuKKjL4VOAjtM/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/TRIScorrectedPlotwithTemp.pdf")
+  drive_update(file=as_id("https://drive.google.com/open?id=1Yp3B-LtKJvuBvunakloUuKKjL4VOAjtM/view?usp=sharing"),media="TRIScorrectedPlotwithTemp.pdf")
 }
 
 
@@ -268,7 +270,7 @@ legend('topleft',legend=as.vector(c('pH','Flagged pH','Temperature','Flagged Tem
 dev.off()
 
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/open?id=1LeWloeKLExtI2_X1Sg6sr7oY0v7Zv5rh/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/TRIScorrectedPlotwithTempAndBadData.pdf")
+  drive_update(file=as_id("https://drive.google.com/open?id=1LeWloeKLExtI2_X1Sg6sr7oY0v7Zv5rh/view?usp=sharing"),media="TRIScorrectedPlotwithTempAndBadData.pdf")
 }
 
 pdf('Eo25Values.pdf',height=8.5,width=11)
@@ -285,7 +287,7 @@ dev.off()
 #
 
 if(SaveToDrive==T){
-  drive_update(file=as_id("https://drive.google.com/open?id=1Nw9dp_zpacP18BgGjNpLGHZhs7HUq2vD/view?usp=sharing"),media="~/sccoos/RStudio/Auto_pH/Eo25Values.pdf")
+  drive_update(file=as_id("https://drive.google.com/open?id=1Nw9dp_zpacP18BgGjNpLGHZhs7HUq2vD/view?usp=sharing"),media="Eo25Values.pdf")
 }
 
 
