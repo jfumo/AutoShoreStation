@@ -3,7 +3,7 @@ rm(list=ls())
 
 SaveToDrive=T
 
-TrisCalTimes=data.frame(time=c("2/2/18 21:37:41","3/1/18 17:05:17","4/3/18 18:50:36","5/16/18 21:32:04","6/22/18 19:42:51","10/3/18 17:35:05","1/29/19 17:56:37","4/3/19 17:08:39","06/12/19 16:52:55","10/3/19 18:58:22"))
+TrisCalTimes=data.frame(time=c("2/2/18 21:37:41","3/1/18 17:05:17","4/3/18 18:50:36","5/16/18 21:32:04","6/22/18 19:42:51","10/3/18 17:35:05","1/29/19 17:56:37","4/3/19 17:08:39","06/12/19 16:52:55","10/3/19 18:58:22","11/07/19 17:06:17"))
 
 wdir=setwd(getwd())
 
@@ -166,8 +166,6 @@ Retain=rbind(Retain,cbind(rawData$time[c(78847:82819)],rawData$ph[c(78847:82819)
 rawData=rawData[-c(78847:82819),]
 #
 plot(rawData$temperature~rawData$time,type='l')
-
-
 
 colnames(Retain)=c("time","pH","Deployment",'Temperature')
 Retain=as.data.frame(Retain)
