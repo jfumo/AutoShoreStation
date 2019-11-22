@@ -186,7 +186,7 @@ dev.off()
 df=data.frame(time=rawData$time,temperature=rawData$temperature,pH=rawData$pHint)
 
 
-write.csv(df,"TRIScorrectedData.csv")
+write.csv(df,row.names = FALSE, "TRIScorrectedData.csv")
 
 #And save that workbook to google drive
 if(SaveToDrive==T){
